@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.cyphergreensystems.cgs",
+      "sha256_cert_fingerprints": [
+        "0A:CD:24:6B:C8:01:2A:17:D3:75:77:DC:F0:5E:9B:E4:8F:D5:F5:77:2A:1C:A3:07:20:EF:F5:47:25:93:AD:38"
+      ]
+    }
+  }
+]
