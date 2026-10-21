@@ -1,0 +1,43 @@
+# Build output
+node_modules/
+.next/
+out/
+dist/
+build/
+.gradle/
+*.iml
+
+# Android
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/app/src/main/assets/public/
+*.apk.idsig
+
+# Signing material — never commit. See android/keystore.properties.example
+*.keystore
+*.jks
+keystore.properties
+**/keystore.properties
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+.netrc
+.git-credentials
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Local tooling
+.playwright-cli/
+preview/shot-*.png
+
+# Local bundle artefact (regenerate with zip)
+CGS-portal-deployable.zip
