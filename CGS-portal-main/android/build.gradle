@@ -1,0 +1,11 @@
+// Root build file. The app is a Trusted Web Activity (TWA): a thin native shell that opens the
+// deployed CGS web app in a Chrome Custom Tab with no browser chrome, once the site publishes
+// /.well-known/assetlinks.json with this app's signing certificate.
+// Repositories are declared in settings.gradle (dependencyResolutionManagement).
+plugins {
+    id 'com.android.application' version '8.7.3' apply false
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.layout.buildDirectory
+}

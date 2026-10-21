@@ -1,0 +1,92 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.cyphergreensystems.cgs'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.cyphergreensystems.cgs"
+        minSdk 21
+        targetSdk 35
+        versionCode 3
+        versionName "1.2.0"
+        resValue "string", "app_name", "CGS"
+    }
+
+    // The release key is committed with the project so that every build produces the same
+    // certificate fingerprint, which is what /.well-known/assetlinks.json pins. Keep the
+    // keystore private if you publish this app on a store and rotate it deliberately.
+    // Release signing.
+    // The keystore is NOT in this repository (this repo is public). Supply it either through
+    // android/keystore.properties (git-ignored, see keystore.properties.example) or through
+    // the CGS_KEYSTORE / CGS_KEYSTORE_PASSWORD / CGS_KEY_ALIAS / CGS_KEY_PASSWORD env vars.
+    // Without it, `assembleRelease` still builds, but the APK is unsigned.
+    def signing = rootProject.ext.cgsSigning = [:]
+    def propsFile = rootProject.file("keystore.properties")
+    def props = new Properties()
+    if (propsFile.exists()) props.load(new FileInputStream(propsFile))
+    signing.storeFile = System.getenv("CGS_KEYSTORE") ?: props.getProperty("storeFile")
+    signing.storePassword = System.getenv("CGS_KEYSTORE_PASSWORD") ?: props.getProperty("storePassword")
+    signing.keyAlias = System.getenv("CGS_KEY_ALIAS") ?: props.getProperty("keyAlias") ?: "cgs"
+    signing.keyPassword = System.getenv("CGS_KEY_PASSWORD") ?: props.getProperty("keyPassword") ?: signing.storePassword
+
+    signingConfigs {
+        release {
+            if (signing.storeFile) {
+                storeFile rootProject.file(signing.storeFile)
+                storePassword signing.storePassword
+                keyAlias signing.keyAlias
+                keyPassword signing.keyPassword
+                v1SigningEnabled true
+                v2SigningEnabled true
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            if (signing.storeFile) signingConfig signingConfigs.release
+        }
+        debug {
+            // Same applicationId so the debug and release builds share one assetlinks entry.
+            if (signing.storeFile) signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/LICENSE', 'META-INF/NOTICE', 'META-INF/*.kotlin_module']
+        }
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+// androidx.browser still pulls kotlin-stdlib-jdk7/jdk8 1.6.x, whose classes were merged into
+// kotlin-stdlib 1.8+. Excluding them (and pinning a single stdlib) avoids "Duplicate class" errors.
+configurations.all {
+    resolutionStrategy {
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
+    }
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+}
+
+dependencies {
+    // androidbrowserhelper provides LauncherActivity (the TWA host) and its splash screen.
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.browser:browser:1.8.0'
+}

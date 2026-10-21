@@ -1,0 +1,68 @@
+name: Build Android APK
+
+# Rebuilds the CGS Trusted Web Activity APK on GitHub's runners, so you never need a local
+# Android SDK. Run it from the Actions tab after changing the app URL or version.
+on:
+  workflow_dispatch:
+    inputs:
+      app_url:
+        description: "Deployed https URL the app should open"
+        required: false
+        default: "https://cgs-portal.vercel.app/"
+  push:
+    branches: [main]
+    paths:
+      - "android/**"
+      - ".github/workflows/android-apk.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Point the app at the deployed site
+        if: ${{ inputs.app_url != '' }}
+        run: |
+          python3 - <<'PY'
+          import os, re, urllib.parse
+          url = os.environ["APP_URL"]
+          host = urllib.parse.urlparse(url).netloc
+          p = "android/app/src/main/res/values/strings.xml"
+          s = open(p).read()
+          s = re.sub(r'<string name="app_url"[^>]*>.*?</string>',
+                     f'<string name="app_url" translatable="false">{url}</string>', s)
+          open(p, "w").write(s)
+          m = "android/app/src/main/AndroidManifest.xml"
+          s = open(m).read()
+          s = re.sub(r'android:host="[^"]+"', f'android:host="{host}"', s)
+          open(m, "w").write(s)
+          print("app_url ->", url, "host ->", host)
+          PY
+        env:
+          APP_URL: ${{ inputs.app_url || 'https://cgs-portal.vercel.app/' }}
+
+      - name: Assemble release APK
+        working-directory: android
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: Verify signature
+        run: |
+          $ANDROID_HOME/build-tools/35.0.0/apksigner verify --print-certs \
+            android/app/build/outputs/apk/release/app-release.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CGS-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error

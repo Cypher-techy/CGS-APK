@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- CHANGE THIS to your deployed https URL. It must match the host used in
+         AndroidManifest.xml (intent filter) and in public/.well-known/assetlinks.json. -->
+    <string name="app_url" translatable="false">https://cypher-green-systems.vercel.app/</string>
+</resources>
