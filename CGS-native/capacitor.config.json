@@ -10,7 +10,8 @@
   },
   "android": {
     "allowMixedContent": false,
-    "webContentsDebuggingEnabled": false
+    "webContentsDebuggingEnabled": false,
+    "adjustMarginsForEdgeToEdge": "force"
   },
   "plugins": {
     "SplashScreen": {
@@ -22,7 +23,14 @@
       "splashFullScreen": false,
       "splashImmersive": false
     },
-    "StatusBar": { "style": "DARK", "backgroundColor": "#0B0B0B", "overlaysWebView": true },
-    "Keyboard": { "resize": "native", "resizeOnFullScreen": true }
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0B0B0B",
+      "overlaysWebView": false
+    },
+    "Keyboard": {
+      "resize": "native",
+      "resizeOnFullScreen": true
+    }
   }
 }
