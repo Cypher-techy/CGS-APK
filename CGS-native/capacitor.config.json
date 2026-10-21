@@ -1,0 +1,28 @@
+{
+  "appId": "com.cyphergreensystems.cgs",
+  "appName": "CGS",
+  "webDir": "www",
+  "server": {
+    "url": "https://cypher-green-systems.vercel.app/",
+    "androidScheme": "https",
+    "cleartext": false,
+    "errorPath": "offline.html"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 900,
+      "launchAutoHide": true,
+      "backgroundColor": "#0B0B0B",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "splashFullScreen": false,
+      "splashImmersive": false
+    },
+    "StatusBar": { "style": "DARK", "backgroundColor": "#0B0B0B", "overlaysWebView": true },
+    "Keyboard": { "resize": "native", "resizeOnFullScreen": true }
+  }
+}
