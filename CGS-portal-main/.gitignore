@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+.env
+.env.local
+.env.*.local
+*.tsbuildinfo
+next-env.d.ts
+.netlify/
+npm-debug.log*
+
+# Android / TWA build output
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/**/playstore/

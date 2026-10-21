@@ -1,0 +1,295 @@
+@import "tailwindcss";
+
+/*
+ * CGS visual language: near-black canvas, white type, frosted-glass surfaces, pill controls,
+ * one warm orange accent and green for environmental data. The Earth is the 3D centrepiece.
+ */
+@theme {
+  --color-night: #0b0b0b;
+  --color-off-white: #0b0b0b; /* page canvas */
+  --color-cream: #151715; /* raised, opaque surface (panels, menus, table heads) */
+  --color-sand: #242724; /* hover and secondary fills */
+  --color-surface: rgb(255 255 255 / 0.06); /* glass card */
+  --color-subtle-border: rgb(255 255 255 / 0.12);
+  --color-heading: #ffffff;
+  --color-charcoal: #ecece6; /* body text */
+  --color-muted-grey: #a3a8a3;
+  --color-forest: #174a35; /* solid green tiles and active states */
+  --color-primary-green: #4cc38a; /* links, bars, positive data */
+  --color-sage: #a7bfa9;
+  --color-clay: #f4783e; /* the single accent */
+  --font-sans: "Satoshi", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  --ease-cgs: cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background-color: var(--color-night);
+  }
+  body {
+    background-color: var(--color-off-white);
+    color: var(--color-charcoal);
+  }
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-clay);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: rgb(244 120 62 / 0.4);
+  }
+  option,
+  optgroup {
+    background-color: var(--color-cream);
+    color: var(--color-charcoal);
+  }
+}
+
+/* Shared design system: every dashboard and public page uses these classes. */
+@layer components {
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-transparent px-4 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-60;
+    transition: background-color 0.4s var(--ease-cgs), color 0.4s var(--ease-cgs), border-color 0.4s var(--ease-cgs);
+  }
+  .btn-primary {
+    @apply bg-white text-night hover:bg-sage;
+  }
+  .btn-accent {
+    @apply bg-clay text-white hover:bg-[#e76b35];
+  }
+  .btn-secondary {
+    @apply border-subtle-border bg-white/10 text-charcoal backdrop-blur hover:bg-white/20;
+  }
+  .btn-ghost {
+    @apply border-white/20 bg-white/10 text-white backdrop-blur hover:bg-white/20;
+  }
+  .btn-danger {
+    @apply border-red-400/30 bg-red-400/10 text-red-300 hover:bg-red-400/20;
+  }
+  .btn-sm {
+    @apply px-3 py-1 text-xs;
+  }
+  .btn-lg {
+    @apply px-6 py-3 text-base;
+  }
+  .card {
+    @apply rounded-3xl border border-subtle-border bg-surface;
+    backdrop-filter: blur(14px);
+  }
+  .card-pad {
+    @apply p-4 sm:p-5;
+  }
+  .label {
+    @apply mb-1 block text-xs font-medium text-charcoal;
+  }
+  .input {
+    @apply block w-full rounded-xl border border-subtle-border bg-white/5 px-3 py-2 text-sm text-charcoal placeholder:text-muted-grey/70 focus:border-clay focus:outline-none focus:ring-1 focus:ring-clay;
+  }
+  .hint {
+    @apply mt-1 text-xs text-muted-grey;
+  }
+  .table-wrap {
+    @apply overflow-x-auto;
+  }
+  .data-table {
+    @apply w-full min-w-[560px] border-collapse text-left text-sm;
+  }
+  .data-table th {
+    @apply border-b border-subtle-border bg-white/5 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-muted-grey;
+  }
+  .data-table td {
+    @apply border-b border-subtle-border px-3 py-2.5 align-top;
+  }
+  .data-table tr:last-child td {
+    @apply border-b-0;
+  }
+  .link {
+    @apply font-medium text-primary-green hover:underline;
+  }
+  .alert {
+    @apply rounded-2xl border px-3 py-2 text-sm;
+  }
+  .alert-success {
+    @apply border-emerald-400/30 bg-emerald-400/10 text-emerald-200;
+  }
+  .alert-error {
+    @apply border-red-400/30 bg-red-400/10 text-red-200;
+  }
+  .alert-info {
+    @apply border-subtle-border bg-white/5 text-charcoal;
+  }
+  .alert-warning {
+    @apply border-amber-400/30 bg-amber-400/10 text-amber-200;
+  }
+  .section-title {
+    @apply text-sm font-semibold text-heading;
+  }
+  .prose-block {
+    @apply whitespace-pre-line text-sm leading-relaxed text-charcoal;
+  }
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  .kicker {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-clay;
+  }
+
+  /* Frosted glass, the surface used for tags, panels and the navbar. */
+  .glass {
+    background: rgb(255 255 255 / 0.11);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgb(255 255 255 / 0.12);
+  }
+  .glass-strong {
+    background: rgb(20 22 20 / 0.72);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgb(255 255 255 / 0.12);
+  }
+
+  /* Call-to-action pill: glass body, a solid icon circle, and a label that rolls on hover. */
+  .cta {
+    @apply relative inline-flex w-fit items-center gap-4 overflow-hidden rounded-full py-1.5 pl-1.5 pr-7 text-base font-medium text-white sm:text-lg;
+    background: rgb(244 120 62 / 0.23);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    isolation: isolate;
+  }
+  .cta.cta-clear {
+    background: rgb(255 255 255 / 0.12);
+  }
+  .cta .cta-icon {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-clay text-white sm:h-12 sm:w-12;
+    transition: transform 0.6s var(--ease-cgs), background-color 0.6s var(--ease-cgs);
+  }
+  .cta.cta-clear .cta-icon {
+    @apply bg-white text-night;
+  }
+  .cta .cta-text {
+    @apply block overflow-hidden;
+    line-height: 1.5;
+  }
+  .cta .cta-text > span {
+    display: inline-block;
+    white-space: nowrap;
+    text-shadow: 0 -2.5rem 0 #fff;
+    transition: transform 0.6s var(--ease-cgs);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .cta:hover .cta-text > span {
+      transform: translateY(2.5rem);
+    }
+    .cta:hover .cta-icon {
+      transform: scale(0.82);
+    }
+  }
+
+  /* Space behind the globe. */
+  .earth {
+    background: radial-gradient(ellipse at 50% 45%, #10231b 0%, #0c1511 45%, var(--color-night) 100%);
+  }
+  /* Concentric dashed rings: the loader motif, reused quietly behind sections. */
+  .rings {
+    background-image:
+      radial-gradient(circle at 50% 50%, transparent 0 calc(18% - 1px), rgb(255 255 255 / 0.07) calc(18% - 1px) 18%, transparent 18%),
+      radial-gradient(circle at 50% 50%, transparent 0 calc(32% - 1px), rgb(255 255 255 / 0.05) calc(32% - 1px) 32%, transparent 32%),
+      radial-gradient(circle at 50% 50%, transparent 0 calc(48% - 1px), rgb(255 255 255 / 0.04) calc(48% - 1px) 48%, transparent 48%),
+      radial-gradient(circle at 50% 50%, transparent 0 calc(66% - 1px), rgb(255 255 255 / 0.03) calc(66% - 1px) 66%, transparent 66%);
+  }
+  .contours,
+  .contours-dark {
+    background-image:
+      radial-gradient(ellipse 60% 50% at 12% 0%, rgb(76 195 138 / 0.08), transparent 70%),
+      radial-gradient(ellipse 50% 60% at 95% 100%, rgb(244 120 62 / 0.07), transparent 70%);
+  }
+
+  /* Content that rises into place when it scrolls into view (see components/Reveal). */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.9s var(--ease-cgs), transform 0.9s var(--ease-cgs);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Loader rings rotate slowly while the Earth loads. */
+@keyframes cgs-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loader-ring {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: cgs-rotate var(--duration, 40s) linear infinite;
+}
+
+/* Map controls, matched to the interface. */
+.earth .maplibregl-ctrl-group {
+  overflow: hidden;
+  border-radius: 9999px;
+  background: rgb(11 11 11 / 0.7);
+  backdrop-filter: blur(14px);
+  box-shadow: none;
+  border: 1px solid rgb(255 255 255 / 0.15);
+}
+.earth .maplibregl-ctrl-group button + button {
+  border-top-color: rgb(255 255 255 / 0.15);
+}
+.earth .maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: invert(1);
+}
+.earth .maplibregl-ctrl-scale {
+  border-color: rgb(255 255 255 / 0.7);
+  background: rgb(11 11 11 / 0.6);
+  color: #fff;
+}
+.earth .maplibregl-ctrl-attrib {
+  font-size: 10px;
+  background: rgb(11 11 11 / 0.6);
+  color: rgb(255 255 255 / 0.7);
+}
+.earth .maplibregl-ctrl-attrib a {
+  color: rgb(255 255 255 / 0.8);
+}
+.earth .maplibregl-ctrl-attrib-button {
+  filter: invert(1);
+}
+.earth .maplibregl-cooperative-gesture-screen {
+  border-radius: 1.5rem;
+}
+/* The older Leaflet map (boundary drawing) keeps its own light controls on the dark page. */
+.leaflet-container {
+  color: #1f2a25;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
